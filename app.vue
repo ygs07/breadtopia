@@ -77,7 +77,7 @@
       </div>
       </div>
 
-      <div class="bg-[url('/img/croissants.png')] bg-cover bg-center bg-no-repeat h-96"></div>
+      <div class="bg-[url('/img/croissants.png')] bg-cover bg-center bg-no-repeat h-96 parallax"></div>
 
       <div class="flex flex-row justify-center p-10 bg-background">
       <div class="flex flex-col space-y-3 text-center">
@@ -92,5 +92,68 @@
 
       </div>
       </div>
+
+
+      <div class="p-24 bg-background">
+        <div class="flex flex-row justify-center space-x-6 p-10 bg-primary-300  shadow-md shadow rounded-md">
+          <div class="flex flex-col">
+            <img src="/img/store.png" class="w-full" alt="bread line" />
+             </div>
+          <div class="flex flex-col justify-between align-items-center h-2/3 my-auto space-y-10">
+          <h1 class="text-4xl"> Contact Us While it’s Still Hot!!!</h1>
+
+          <div>
+            <h3 class="text-2xl"> Our Address</h3>
+            <p>766, bread avenue, Del toro plaza.</p>
+          </div>
+          <div>
+            <h3 class="text-2xl"> +34 933 55 00 01</h3>
+            <p>bread@republic.com</p>
+          </div>
+             </div>
+        </div>
+        </div>
+
+        <footer class="bg-primary-500  rounded-t-3xl">
+
+          <div class="flex flex-row justify-center p-10 ">
+      <div class="flex flex-col space-y-3 text-center">
+
+
+        <h2 class="text-5xl font-bold ">Breadtopia</h2>
+
+        <div class="w-1/2 mx-auto ">
+
+          <p class="text-lg font-semibold ">Horneando sonrisas desde el corazón de Barcelona, un pan artesanal a la vez</p>
+        </div>
+
+      </div>
+      </div>
+
+      <div class="bg-primary-200  rounded-t-3xl flex flex-row justify-between p-10">
+<p>2024 Breadtopia | All Rights Reserved</p>
+
+<div class="space-x-3">
+<NuxtLink>Home</NuxtLink>
+  <NuxtLink>Menu</NuxtLink>
+  <NuxtLink>History</NuxtLink>
+</div>
+      </div>
+
+        </footer>
   </div>
 </template>
+
+<style scoped>
+.parallax {
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat:
+ no-repeat;
+  background-size: cover;
+  transform: translate3d(0, 0, 0);
+}
+.parallax-window {
+  overflow: hidden;
+}
+</style>
