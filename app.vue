@@ -1,3 +1,131 @@
+<script setup lang="ts">
+
+interface BakeryMenuItem {
+  id?: number; 
+  name: string;
+  price?: number;
+  image_path?: string;
+  short_description?: string;
+  sub_categories?: Array<BakeryMenuItemSubCategory>;
+  has_sub_categories?: boolean;
+}
+interface BakeryMenuItemSubCategory {
+  name: string;
+  id: number; 
+  price: number;
+  image_path: string;
+  short_description: string;
+}
+
+
+const bakery_menu_items: BakeryMenuItem[] = [
+{
+    id: 1,
+    name: "Bollería fresca del día",
+    price: 2.50,
+    image_path: "/images/pastries.jpg", // Replace with actual image path
+    short_description: "Daily baked delights.",
+  },
+  {
+    id: 2,
+    name: "Tostadas con Tomate y aceite",
+    price: 3.00,
+    image_path: "/images/toast-tomato-olive-oil.jpg", // Replace with actual image path
+    short_description: "Classic Spanish breakfast.",
+  },
+  {
+    id: 3,
+    name: "Tostadas con Aguacate y salmón",
+    price: 6.50,
+    image_path: "/images/toast-avocado-salmon.jpg", // Replace with actual image path
+    short_description: "Creamy & savory.",
+  },
+  {
+    id: 4,
+    name: "Tostadas con Jamón Ibérico",
+    price: 7.00,
+    image_path: "/images/toast-iberico-ham.jpg", // Replace with actual image path
+    short_description: "Spanish cured ham on toast.",
+  },
+  {
+    id: 5,
+    name: "Yogur con fruta y granola",
+    price: 5.00,
+    image_path: "/images/yogurt-fruit-granola.jpg", // Replace with actual image path
+    short_description: "Healthy & refreshing.",
+  },
+  {
+    name: "Panes Artesanales (Artisan Breads)",
+    has_sub_categories: true,
+    sub_categories: [
+      {
+        id: 6,
+        name: "Barra blanca",
+        price: 4.00,
+        image_path: "/images/white-sourdough.jpg", // Replace with actual image path
+        short_description: "Fluffy & light.",
+      },
+      {
+        id: 7,
+        name: "Barra integral",
+        price: 4.50,
+        image_path: "/images/whole-wheat-bread.jpg", // Replace with actual image path
+        short_description: "Hearty & healthy.",
+      },
+      {
+        id: 8,
+        name: "Chapata",
+        price: 3.50,
+        image_path: "/images/ciabatta-bread.jpg", // Replace with actual image path
+        short_description: "Crusty & airy.",
+      },
+      {
+        id: 9,
+        name: "Pan de centeno",
+        price: 4.00,
+        image_path: "/images/rye-bread.jpg", // Replace with actual image path
+        short_description: "Dense & flavorful.",
+      },
+      {
+        id: 10,
+        name: "Focaccia",
+        price: 5.00,
+        image_path: "/images/focaccia-bread.jpg", // Replace with actual image path
+        short_description: "Herbs & olive oil.",
+      },
+    ],
+  },
+  {
+    name: "Sandwiches (Sandwiches)",
+    has_sub_categories: true,
+    sub_categories: [
+      {
+        id: 11,
+        name: "Bocadillo clásico",
+        price: 5.50,
+        image_path: "/images/sandwich-ham-cheese.jpg", // Replace with actual image path
+        short_description: "Timeless favorite.",
+      },
+      {
+        id: 12,
+        name: "Bocadillo vegetariano",
+        price: 7.00,
+        image_path: "/images/sandwich-roasted-veggies.jpg", // Replace with actual image path
+        short_description: "Colorful & flavorful.",
+      },
+      {
+        id: 13,
+        name: "Bocadillo de pollo asado",
+        price: 6.00,
+        image_path: "/images/sandwich-roasted-chicken.jpg", // Replace with actual image path
+        short_description: "Tender & creamy.",
+      },
+    ]
+  }
+]
+
+</script>
+
 <template>
   <nav class="flex flex-row justify-between p-10 bg-primary-500 sticky border-b-2 border-primary-500 rounded-b-lg"> 
 <div class="space-x-5">
@@ -35,7 +163,7 @@
  Utopía del pan.</h1>
         
           <div class="mt-10 flex items-center justify-center gap-x-6">
-            <a href="#" class="rounded-full bg-primary-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Buy Bread</a>
+            <button href="#" class="rounded-full bg-primary-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Buy Bread</button>
 
           </div>
         </div>
@@ -68,13 +196,20 @@
       </div>
     </div>
 
-    <div class="flex flex-row justify-center p-10 bg-background">
-      <div class="flex flex-row space-x-3">
+    <div class="flex flex-col justify-center text-center p-10 bg-background space-y-10">
+      <div class="flex flex-row space-x-3 justify-center">
 
         <div class="border border-primary-500 border-2 rounded-lg   dropshadow-lg shadow-lg"></div>
         <h2 class="text-5xl font-bold">Nuestro Menú</h2>
         <div class="border border-primary-500 border-2 rounded-lg   dropshadow-lg shadow-lg"></div>
       </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div v-for="(n, index) in 4">
+          <MenuItemCard :item="bakery_menu_items[index]" />
+        </div>
+
+</div>
       </div>
 
       <div class="bg-[url('/img/croissants.png')] bg-cover bg-center bg-no-repeat h-96 parallax"></div>
