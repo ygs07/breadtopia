@@ -1,22 +1,41 @@
 <script setup lang="ts">
 
+interface Cart{
+is_empty: boolean;
+items: Array <BakeryMenuItem>;
+number_of_items_in_cart : number;  
+}
+
 interface BakeryMenuItem {
   id?: number; 
   name: string;
   price?: number;
   image_path?: string;
   short_description?: string;
+  full_description?: string;
+  item_quantity_to_buy?: number;
   sub_categories?: Array<BakeryMenuItemSubCategory>;
   has_sub_categories?: boolean;
 }
 interface BakeryMenuItemSubCategory {
   name: string;
   id: number; 
+  item_quantity_to_buy?: number;
   price: number;
   image_path: string;
   short_description: string;
+  full_description: string;
 }
 
+const cart: Cart = reactive({
+  is_empty: true,
+  items: [],
+  number_of_items_in_cart: 0,
+})
+
+const numberOfItemsInCart: number = computed(() => {
+return cart.items.length
+})
 
 const bakery_menu_items: BakeryMenuItem[] = [
 {
@@ -25,6 +44,7 @@ const bakery_menu_items: BakeryMenuItem[] = [
     price: 2.50,
     image_path: "/images/pastries.jpg", // Replace with actual image path
     short_description: "Daily baked delights.",
+    full_description: "Our selection of freshly baked pastries, perfect for a light breakfast or afternoon snack. Choose from croissants, muffins, pain au chocolat, and more!",
   },
   {
     id: 2,
@@ -32,6 +52,7 @@ const bakery_menu_items: BakeryMenuItem[] = [
     price: 3.00,
     image_path: "/images/toast-tomato-olive-oil.jpg", // Replace with actual image path
     short_description: "Classic Spanish breakfast.",
+    full_description: "Simple yet satisfying, toasted bread topped with fresh tomato and a drizzle of olive oil. A timeless Spanish breakfast option.",
   },
   {
     id: 3,
@@ -39,6 +60,7 @@ const bakery_menu_items: BakeryMenuItem[] = [
     price: 6.50,
     image_path: "/images/toast-avocado-salmon.jpg", // Replace with actual image path
     short_description: "Creamy & savory.",
+    full_description: "A luxurious twist on toast! Creamy avocado spread and slices of smoked salmon on toasted bread. A delicious and healthy option.",
   },
   {
     id: 4,
@@ -46,6 +68,7 @@ const bakery_menu_items: BakeryMenuItem[] = [
     price: 7.00,
     image_path: "/images/toast-iberico-ham.jpg", // Replace with actual image path
     short_description: "Spanish cured ham on toast.",
+    full_description: "Indulge in the rich flavor of cured Spanish ham (Jamón Ibérico) served on toasted bread. A gourmet treat for any time of day.",
   },
   {
     id: 5,
@@ -53,17 +76,19 @@ const bakery_menu_items: BakeryMenuItem[] = [
     price: 5.00,
     image_path: "/images/yogurt-fruit-granola.jpg", // Replace with actual image path
     short_description: "Healthy & refreshing.",
+    full_description: "A healthy and refreshing combination of yogurt, fresh fruit, and crunchy granola. A perfect breakfast or light snack.",
   },
   {
     name: "Panes Artesanales (Artisan Breads)",
     has_sub_categories: true,
     sub_categories: [
-      {
+    {
         id: 6,
         name: "Barra blanca",
         price: 4.00,
         image_path: "/images/white-sourdough.jpg", // Replace with actual image path
         short_description: "Fluffy & light.",
+        full_description: "Made with a long fermentation process, this white sourdough bread boasts a fluffy texture and a slightly tangy flavor. Perfect for sandwiches, toasting, or simply enjoying on its own.",
       },
       {
         id: 7,
@@ -71,6 +96,7 @@ const bakery_menu_items: BakeryMenuItem[] = [
         price: 4.50,
         image_path: "/images/whole-wheat-bread.jpg", // Replace with actual image path
         short_description: "Hearty & healthy.",
+        full_description: "Packed with whole grains and fiber, our whole-wheat bread is a healthy and satisfying choice. Enjoy it toasted with your favorite toppings or in a hearty sandwich.",
       },
       {
         id: 8,
@@ -78,6 +104,7 @@ const bakery_menu_items: BakeryMenuItem[] = [
         price: 3.50,
         image_path: "/images/ciabatta-bread.jpg", // Replace with actual image path
         short_description: "Crusty & airy.",
+        full_description: "This Italian classic features a crispy crust and a light, airy interior. Ideal for dipping in olive oil, using in paninis, or enjoying as part of a charcuterie board.",
       },
       {
         id: 9,
@@ -85,6 +112,7 @@ const bakery_menu_items: BakeryMenuItem[] = [
         price: 4.00,
         image_path: "/images/rye-bread.jpg", // Replace with actual image path
         short_description: "Dense & flavorful.",
+        full_description: "With a distinct rye flavor and a denser texture, rye bread is a great option for those who enjoy a more substantial bread. Perfect for hearty sandwiches or toasted with cheese.",
       },
       {
         id: 10,
@@ -92,6 +120,7 @@ const bakery_menu_items: BakeryMenuItem[] = [
         price: 5.00,
         image_path: "/images/focaccia-bread.jpg", // Replace with actual image path
         short_description: "Herbs & olive oil.",
+        full_description: "This flavorful bread features a golden crust and a soft, chewy interior. Topped with herbs and olive oil, it's perfect for enjoying on its own or as an accompaniment to a meal.",
       },
     ],
   },
@@ -99,30 +128,46 @@ const bakery_menu_items: BakeryMenuItem[] = [
     name: "Sandwiches (Sandwiches)",
     has_sub_categories: true,
     sub_categories: [
-      {
+    {
         id: 11,
-        name: "Bocadillo clásico",
-        price: 5.50,
-        image_path: "/images/sandwich-ham-cheese.jpg", // Replace with actual image path
-        short_description: "Timeless favorite.",
+        name: "Tarta de chocolate",
+        price: 4.50,
+        image_path: "/images/chocolate-cake.jpg", // Replace with actual image path
+        short_description: "Decadent & delicious.",
+        full_description: "A rich and decadent chocolate cake, perfect for satisfying your sweet tooth. Layers of moist chocolate cake are frosted with a creamy chocolate ganache.",
       },
       {
         id: 12,
-        name: "Bocadillo vegetariano",
-        price: 7.00,
-        image_path: "/images/sandwich-roasted-veggies.jpg", // Replace with actual image path
-        short_description: "Colorful & flavorful.",
+        name: "Flan de vainilla",
+        price: 3.00,
+        image_path: "/images/vanilla-flan.jpg", // Replace with actual image path
+        short_description: "Silky smooth & creamy.",
+        full_description: "A classic Spanish dessert, our flan is made with fresh eggs, milk, and vanilla. Enjoy its silky smooth texture and creamy vanilla flavor.",
       },
-      {
-        id: 13,
-        name: "Bocadillo de pollo asado",
-        price: 6.00,
-        image_path: "/images/sandwich-roasted-chicken.jpg", // Replace with actual image path
-        short_description: "Tender & creamy.",
-      },
+      // {
+      //   id: 13,
+      //   name: "Bocadillo de pollo asado",
+      //   price: 6.00,
+      //   image_path: "/images/sandwich-roasted-chicken.jpg", // Replace with actual image path
+      //   short_description: "Tender & creamy.",
+      // },
     ]
   }
 ]
+
+
+const addItemToCart: any = (item_to_add: BakeryMenuItem) => {
+// let item_to_add_to_cart: any = bakery_menu_items.filter((item) =>  item.id == item_to_add.id)
+item_to_add.item_quantity_to_buy? item_to_add.item_quantity_to_buy++ : item_to_add.item_quantity_to_buy = 1
+cart.items.push(item_to_add)
+cart.number_of_items_in_cart++
+console.log(item_to_add)
+cart.items.push(item_to_add)
+cart.number_of_items_in_cart = numberOfItemsInCart
+cart.is_empty = false
+}
+
+
 
 </script>
 
@@ -168,20 +213,10 @@ const bakery_menu_items: BakeryMenuItem[] = [
       >
         <div class="text-center">
           <nuxt-link to="/" class="">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-6 h-6 m-auto"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205l3 1m1.5.5l-1.5-.5M6.75 7.364V3h-3v18m3-13.636l10.5-3.819"
-              />
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+</svg>
+
             <span> Home </span>
           </nuxt-link>
         </div>
@@ -206,26 +241,20 @@ const bakery_menu_items: BakeryMenuItem[] = [
             <span> About </span>
           </nuxt-link>
         </div>
-        <div class="text-center">
-          <nuxt-link to="/projects" class="">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-6 h-6 m-auto"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"
-              />
-            </svg>
+<div class="text-center">
+                  <button to="/projects" class="relative ">
+                    <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none transform translate-x-1/2 -translate-y-1/2 bg-white text-black rounded-full">{{cart.number_of_items_in_cart}}</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+        </svg>
 
-            <span> Projects </span>
-          </nuxt-link>
+
+                    <span class="relative"> Cart </span>
+                    
+            </button>
         </div>
+
+
         <div class="text-center">
           <a
             href="https://ys-portfolio-site.s3.eu-west-1.amazonaws.com/Resume.pdf"
@@ -299,7 +328,7 @@ const bakery_menu_items: BakeryMenuItem[] = [
       </div>
    
     </div>
-    <!-- <NuxtWelcome /> -->
+
 
 
     <div class="flex flex-row flex-wrap-reverse justify-between p-10 bg-background">
@@ -333,7 +362,9 @@ const bakery_menu_items: BakeryMenuItem[] = [
 
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div v-for="(n, index) in 4" >
-          <MenuItemCard :item="bakery_menu_items[index]" />
+          <MenuItemCard :item="bakery_menu_items[index]"
+          @add-item-to-cart="addItemToCart"
+          />
         </div>
 
 </div>
@@ -355,6 +386,54 @@ const bakery_menu_items: BakeryMenuItem[] = [
       </div>
       </div>
 
+      <div class="p-24 bg-background py-10">
+        <h2 class="text-5xl font-bold text-primary-900">My Cart</h2>
+
+      
+        <div class="flex flex-row" >
+
+          <div v-show="cart.is_empty" class="flex flex-col">
+<div>
+<h2 class="text-2xl font-bold">Your Cart is empty </h2>  
+</div>
+
+
+        </div>
+          <div class="w-2/3" v-show="!cart.is_empty">
+            <div class="max-w-sm w-full lg:max-w-full lg:flex" v-for="(cart_item, index) in cart.items" :key="index">
+  <div class="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden" style="background-image: url('/img/store.png')" title="Woman holding a mug">
+  </div>
+  <div class="border-r border-b border-8 border-l border-primary-400 lg:border-l-0 lg:border-t lg:border-primary-700 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
+    <div class="mb-8">
+      <p class="text-sm text-gray-600 flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-primary-700 mr-1">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+</svg>
+
+       20 mins
+      </p>
+      <div class="text-gray-900 font-bold text-xl mb-2">{{ cart_item.name }}</div>
+      <p class="text-gray-700 text-base">{{ cart_item.full_description }}</p>
+    </div>
+    <div class="flex items-center justify-between flex-row">
+      <div class="text-sm">
+        <p class="text-gray-900 leading-none">Jonathan Reinink</p>
+        <p class="text-gray-600">Aug 18</p>
+      </div>
+
+      <div>
+<button> - </button>
+      <input type="number" class="border-b " :value="cart_item.item_quantity_to_buy" readonly/>
+      <button> + </button>
+      </div>
+
+      <h2 class="text-3xl font-bold">€{{ cart_item.price}}</h2>
+    </div>
+  </div>
+</div>
+            </div>
+            </div>
+        </div>
 
       <div class="md:p-24 bg-background py-10">
         <div class="flex flex-row flex-wrap md:flex-no-wrap justify-center space-x-6 p-10 bg-primary-300 md:space-y-0 space-y-9 shadow-md shadow rounded-md">
