@@ -7,6 +7,9 @@ export default defineNuxtConfig({
           rel: 'stylesheet', href:'https://fonts.googleapis.com/css2?family=Akaya+Telivigala&display=swap'
         }
       ]
+      // script: [
+      //   { src: 'https://js.stripe.com/v3' },
+      // ]
     }
   },
   devtools: { enabled: true },

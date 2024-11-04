@@ -1,4 +1,26 @@
 <script setup lang="ts">
+// import paystack from "vue3-paystack";
+import { StripeCheckout } from '@vue-stripe/vue-stripe';
+
+const payment_reference: ComputedRef<string> = computed(() => {
+  let payment_reference = "";
+        let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for( let i=0; i < 15; i++ )
+        characters += characters.charAt(Math.floor(Math.random() * characters.length));
+
+        return payment_reference;
+})
+const payment_details = ref({
+  public_key: "pk_test_SuGpZR8lX27M4Heg1QETHtKz00qMyoWQL8",
+  // public_key: "pk_test_a3c52ce327f5f3e830c62d7d2209ca361833dbb9",
+  payment_reference: payment_reference.value,
+})
+
+const lineItems= ref({
+        amount: 2000,
+        currency: 'usd'
+})
 
 interface Cart{
 is_empty: boolean;
@@ -190,6 +212,8 @@ const addItemToCart: any = (item_to_add: BakeryMenuItem) => {
   cart.is_empty = false
 }
 
+
+const total_amount = cart.items.reduce((total, item) => total + (item.price * item.item_quantity_to_buy), 0).toFixed(2)
 
 
 </script>
@@ -458,7 +482,7 @@ const addItemToCart: any = (item_to_add: BakeryMenuItem) => {
      Total
     </span>
     <span>
-      €{{ cart.items.reduce((total, item) => total + (item.price * item.item_quantity_to_buy), 0).toFixed(2) }}
+      €{{ total_amount }}
     </span>
   </div>
 
@@ -478,7 +502,29 @@ const addItemToCart: any = (item_to_add: BakeryMenuItem) => {
 
   </div>
 
-    <button @click="" class="rounded-full bg-primary-500 px-3.5 mt-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Buy</button>
+  <stripe-checkout
+  ref="checkoutRef"
+      mode="payment"
+:lineItems="lineItems"
+                buttonText="Buy"
+                :publicKey="payment_details.public_key"
+                :email="'ds@ew.com'"
+                :amount="total_amount"
+                
+                :reference="payment_details.payment_reference"
+              ></stripe-checkout>
+              <button class="'rounded-full bg-primary-500 px-3.5 mt-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'">Pay now!</button>
+
+  <!-- <paystack
+                buttonClass="'rounded-full bg-primary-500 px-3.5 mt-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'"
+                buttonText="Buy"
+                :publicKey="payment_details.public_key"
+                :email="'ds@ew.com'"
+                :amount="total_amount"
+                :reference="payment_details.payment_reference"
+                :currency="'usd'"
+              ></paystack> -->
+   
 
   </div>
   </div>
